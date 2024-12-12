@@ -1,0 +1,45 @@
+git: git@github.com:Sample/docs.git
+branch: master
+
+steps:
+  - started
+  - build
+  - publish
+
+started:
+  image: cgicentral/autobuild
+  volumes:
+    /var/www/docs.example.com/html:
+      local: /var/www/docs.example.com/html
+  script:
+    - cd /var/www/example.com/html
+    - echo "----" >> x-build.txt
+    - echo "NEW BUILD STARTED for $CI_COMMIT_SHA" >> x-build.txt
+    - TZ=UTC LANG=en date >> x-build.txt
+    - sleep 1
+
+
+build:
+  image: cgicentral/node-lts-with-awscli
+  script:
+    - cd ./website
+    - npm install
+    - npm run build
+    - date > ./build/docs/docs.txt
+  cache:
+    paths:
+      - website/node_modules
+
+publish:
+  image: cgicentral/autobuild
+  volumes:
+    /var/www/docs.example.com/html:
+      local: /var/www/docs.example.com/html
+  script:
+    - rsync -av --delete ./website/build/ex-docs/ /var/www/docs.example.com/html/
+    - cp ./website/build/redirects.json /var/www/docs.example.com/html/
+    - cd /var/www/docs.example.com/html
+    - echo "----" > x-build.txt
+    - echo "BUILD $CI_COMMIT_SHA" >> x-build.txt
+    - TZ=UTC LANG=en date >> x-build.txt
+    - sleep 1

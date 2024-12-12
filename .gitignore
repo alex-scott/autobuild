@@ -1,0 +1,9 @@
+.env
+git/
+scripts/*
+venv/
+workspace/
+.idea/
+auth.yaml
+tmp/
+www/

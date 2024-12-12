@@ -1,0 +1,16 @@
+[Unit]
+Description=Autobuild service
+After=network.target
+# systemd gives up restarting your service if it fails to start more than 5 times within a 10 seconds interval.
+StartLimitBurst=200
+StartLimitIntervalSec=60
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+User=autobuild
+ExecStart=/bin/bash /opt/autobuild/daemon.sh
+
+[Install]
+WantedBy=multi-user.target

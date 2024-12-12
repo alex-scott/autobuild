@@ -1,0 +1,7 @@
+git:
+  git@github.com:Author/repo.git:
+      private: |
+            -----BEGIN RSA PRIVATE KEY-----
+            ....
+            -----END RSA PRIVATE KEY-----
+      
